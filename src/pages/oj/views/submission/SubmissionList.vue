@@ -20,7 +20,7 @@
             </li>
 
 
-            <li>
+            <li v-if="isAdminRole">
               <i-switch size="large" v-model="formFilter.myself" @on-change="handleQueryChange">
                 <span slot="open">{{$t('m.Mine')}}</span>
                 <span slot="close">{{$t('m.All')}}</span>
@@ -294,7 +294,7 @@
       }
     },
     computed: {
-      ...mapGetters(['isAuthenticated', 'user']),
+      ...mapGetters(['isAuthenticated', 'user', 'isAdminRole']),
       title () {
         if (!this.contestID) {
           return this.$i18n.t('m.Status')

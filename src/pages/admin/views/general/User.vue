@@ -193,7 +193,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('m.User_New_Password')">
-              <el-input v-model="user.password"></el-input>
+              <el-input show-password v-model="user.password"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">

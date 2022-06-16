@@ -1,35 +1,28 @@
 <template>
   <Panel shadow :padding="10">
-    <div slot="title">
-      {{title}}
-    </div>
-    <div slot="extra">
-      <Button v-if="listVisible" type="info" @click="init" :loading="btnLoading">{{$t('m.Refresh')}}</Button>
-      <Button v-else type="ghost" icon="ios-undo" @click="goBack">{{$t('m.Back')}}</Button>
-    </div>
 
     <transition-group name="announcement-animate" mode="in-out">
       <div class="no-announcement" v-if="!announcements.length" key="no-announcement">
         <p>{{$t('m.No_Announcements')}}</p>
       </div>
-      <template v-if="listVisible">
-        <ul class="announcements-container" key="list">
-          <li v-for="announcement in announcements" :key="announcement.title">
-            <div class="flex-container">
-              <div class="title"><a class="entry" @click="goAnnouncement(announcement)">
-                {{announcement.title}}</a></div>
-              <div class="date">{{announcement.create_time | localtime }}</div>
-              <div class="creator"> {{$t('m.By')}} {{announcement.created_by.username}}</div>
-            </div>
-          </li>
-        </ul>
-        <Pagination v-if="!isContest"
-                    key="page"
-                    :total="total"
-                    :page-size="limit"
-                    @on-change="getAnnouncementList">
-        </Pagination>
-      </template>
+      <ul class="announcements-container" key="list">
+        <li v-for="announcement in announcements" :key="announcement.title">
+          <div class="flex-container">
+            <div v-katex v-html="announcement.title" key="announcement-title" class="title markdown-body"></div>
+            <div class="date">{{announcement.create_time | localtime }}</div>
+            <div class="creator"> {{$t('m.By')}} {{announcement.created_by.username}}</div>
+          </div>
+          <div>
+            <div v-katex v-html="announcement.content" key="content" class="content-container markdown-body"></div>
+          </div>
+        </li>
+      </ul>
+      <Pagination v-if="!isContest"
+                  key="page"
+                  :total="total"
+                  :page-size="limit"
+                  @on-change="getAnnouncementList">
+      </Pagination>
 
       <template v-else>
         <div v-katex v-html="announcement.content" key="content" class="content-container markdown-body"></div>
@@ -53,8 +46,7 @@
         total: 10,
         btnLoading: false,
         announcements: [],
-        announcement: '',
-        listVisible: true
+        announcement: ''
       }
     },
     mounted () {
@@ -86,23 +78,11 @@
         }, () => {
           this.btnLoading = false
         })
-      },
-      goAnnouncement (announcement) {
-        this.announcement = announcement
-        this.listVisible = false
-      },
-      goBack () {
-        this.listVisible = true
-        this.announcement = ''
       }
     },
     computed: {
       title () {
-        if (this.listVisible) {
-          return this.isContest ? this.$i18n.t('m.Contest_Announcements') : this.$i18n.t('m.Announcements')
-        } else {
-          return this.announcement.title
-        }
+        return this.isContest ? this.$i18n.t('m.Contest_Announcements') : this.$i18n.t('m.Announcements')
       },
       isContest () {
         return !!this.$route.params.contestID
@@ -129,7 +109,7 @@
         .title {
           flex: 1 1;
           text-align: left;
-          padding-left: 10px;
+          padding-left: 20px;
           a.entry {
             color: #495060;
             &:hover {

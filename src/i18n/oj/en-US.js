@@ -8,6 +8,7 @@ export const m = {
   Sample_Input: 'Sample Input',
   Sample_Output: 'Sample Output',
   Hint: 'Hint',
+  Answer: 'Answer',
   Source: 'Source',
   Status: 'Status',
   Information: 'Information',

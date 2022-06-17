@@ -8,6 +8,7 @@ export const m = {
   Sample_Input: '输入样例',
   Sample_Output: '输出样例',
   Hint: '提示',
+  Answer: '参考答案',
   Source: '题目来源',
   Status: '状态',
   Information: '题目信息',

@@ -88,6 +88,7 @@ export const m = {
   Output: 'Output',
   Score: 'Score',
   Hint: 'Hint',
+  Answer: 'Answer',
   Source: 'Source',
   Edit_Problem: 'Edit Problme',
   Add_Problme: 'Add Problem',

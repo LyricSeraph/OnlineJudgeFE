@@ -88,6 +88,7 @@ export const m = {
   Output: '输出',
   Score: '分数',
   Hint: '提示',
+  Answer: '参考答案',
   Source: '来源',
   Edit_Problem: '编辑问题',
   Add_Problem: '添加问题',

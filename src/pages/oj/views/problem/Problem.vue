@@ -41,6 +41,13 @@
             </Card>
           </div>
 
+          <div v-if="problem.answer && problem.my_status === 0">
+            <p class="title">{{$t('m.Answer')}}</p>
+            <Card dis-hover>
+              <div class="content" v-html=problem.answer></div>
+            </Card>
+          </div>
+
           <div v-if="problem.source">
             <p class="title">{{$t('m.Source')}}</p>
             <p class="content">{{problem.source}}</p>
@@ -248,7 +255,8 @@
             username: ''
           },
           tags: [],
-          io_mode: {'io_mode': 'Standard IO'}
+          io_mode: {'io_mode': 'Standard IO'},
+          answer: ''
         },
         pie: pie,
         largePie: largePie,

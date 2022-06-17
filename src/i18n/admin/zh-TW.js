@@ -88,6 +88,7 @@ export const m = {
   Output: '輸出',
   Score: '分數',
   Hint: '提示',
+  Answer: '参考答案',
   Source: '來源',
   // Contest.vue
   ContestTitle: '標題',

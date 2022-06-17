@@ -8,6 +8,7 @@ export const m = {
   Sample_Input: '輸入範例',
   Sample_Output: '輸出範例',
   Hint: '提示',
+  Answer: '参考答案',
   Source: '題目來源',
   Status: '狀態',
   Information: '題目資訊',

@@ -195,9 +195,12 @@ export const m = {
   Total_Score: 'Total Score',
   // ProblemList.vue
   Problem_List: 'Problem List',
+  Challenge: 'Challenge',
+  Very_High: 'VeryHigh',
   High: 'High',
   Mid: 'Mid',
   Low: 'Low',
+  Beginner: 'Beginner',
   All: 'All',
   Reset: 'Reset',
   Pick_One: 'Pick one',

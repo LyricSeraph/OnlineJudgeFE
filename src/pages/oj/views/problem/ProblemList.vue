@@ -12,9 +12,12 @@
               </span>
               <Dropdown-menu slot="list">
                 <Dropdown-item name="">{{$t('m.All')}}</Dropdown-item>
+                <Dropdown-item name="Beginner">{{$t('m.Beginner')}}</Dropdown-item>
                 <Dropdown-item name="Low">{{$t('m.Low')}}</Dropdown-item>
                 <Dropdown-item name="Mid" >{{$t('m.Mid')}}</Dropdown-item>
                 <Dropdown-item name="High">{{$t('m.High')}}</Dropdown-item>
+                <Dropdown-item name="VeryHigh">{{$t('m.Very_High')}}</Dropdown-item>
+                <Dropdown-item name="Challenge">{{$t('m.Challenge')}}</Dropdown-item>
               </Dropdown-menu>
             </Dropdown>
           </li>
@@ -137,9 +140,13 @@
             title: this.$i18n.t('m.Level'),
             render: (h, params) => {
               let t = params.row.difficulty
-              let color = 'blue'
-              if (t === 'Low') color = 'green'
+              let color = ''
+              if (t === 'Beginner') color = 'lightgreen'
+              else if (t === 'Low') color = 'green'
+              else if (t === 'Mid') color = 'blue'
               else if (t === 'High') color = 'yellow'
+              else if (t === 'VeryHigh') color = 'red'
+              else color = 'black'
               return h('Tag', {
                 props: {
                   color: color

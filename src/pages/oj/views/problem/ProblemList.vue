@@ -95,7 +95,7 @@
           {
             title: '#',
             key: '_id',
-            width: 120,
+            width: 160,
             render: (h, params) => {
               return h('Button', {
                 props: {

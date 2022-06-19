@@ -1,5 +1,13 @@
 <template>
-  <textarea ref="editor"></textarea>
+  <div>
+    <textarea ref="editor"></textarea>
+    <div style="display: flex; width: 100%; height: 64px; flex-flow: row nowrap; justify-content: space-between">
+      <textarea ref="raw-editor" style="flex: 1 1 auto; resize: none" v-model="rawEditorValue"></textarea>
+      <el-button size="small" v-on:click="syncToSimditor">Synchronize</el-button>
+    </div>
+
+  </div>
+
 </template>
 
 <script>
@@ -24,7 +32,8 @@
     data () {
       return {
         editor: null,
-        currentValue: this.value
+        currentValue: this.value,
+        rawEditorValue: this.value
       }
     },
     mounted () {
@@ -46,12 +55,19 @@
       })
       this.editor.on('valuechanged', (e, src) => {
         this.currentValue = this.editor.getValue()
+        this.rawEditorValue = this.currentValue
       })
       this.editor.on('decorate', (e, src) => {
         this.currentValue = this.editor.getValue()
+        this.rawEditorValue = this.currentValue
       })
 
       this.editor.setValue(this.value)
+    },
+    methods: {
+      syncToSimditor () {
+        this.editor.setValue(this.rawEditorValue)
+      }
     },
     watch: {
       'value' (val) {

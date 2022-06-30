@@ -159,7 +159,8 @@
       },
       goEdit (problemId) {
         if (this.routeName === 'problem-list') {
-          this.$router.push({name: 'edit-problem', params: {problemId}})
+          // this.$router.push({name: 'edit-problem', params: {problemId}})
+          window.open('/admin/problem/edit/' + problemId, '_blank')
         } else if (this.routeName === 'contest-problem-list') {
           this.$router.push({name: 'edit-contest-problem', params: {problemId: problemId, contestId: this.contestId}})
         }

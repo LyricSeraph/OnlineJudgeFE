@@ -1,43 +1,65 @@
 <template>
-  <Row type="flex" justify="space-around">
-    <Col :span="20" id="status">
-      <Alert :type="status.type" showIcon>
-        <span class="title">{{$t('m.' + status.statusName.replace(/ /g, "_"))}}</span>
-        <div slot="desc" class="content">
-          <template v-if="isCE">
-            <pre>{{submission.statistic_info.err_info}}</pre>
-          </template>
-          <template v-else>
-            <span>{{$t('m.Time')}}: {{submission.statistic_info.time_cost | submissionTime}}</span>
-            <span>{{$t('m.Memory')}}: {{submission.statistic_info.memory_cost | submissionMemory}}</span>
-            <span>{{$t('m.Lang')}}: {{submission.language}}</span>
-            <span>{{$t('m.Author')}}: {{submission.username}}</span>
-          </template>
+  <div>
+    <Row type="flex" justify="space-around">
+      <Col :span="20" id="status">
+        <Alert :type="status.type" showIcon>
+          <span class="title">{{$t('m.' + status.statusName.replace(/ /g, "_"))}}</span>
+          <div slot="desc" class="content">
+            <template v-if="isCE">
+              <pre>{{submission.statistic_info.err_info}}</pre>
+            </template>
+            <template v-else>
+              <span>{{$t('m.Time')}}: {{submission.statistic_info.time_cost | submissionTime}}</span>
+              <span>{{$t('m.Memory')}}: {{submission.statistic_info.memory_cost | submissionMemory}}</span>
+              <span>{{$t('m.Lang')}}: {{submission.language}}</span>
+              <span>{{$t('m.Author')}}: {{submission.username}}</span>
+            </template>
+          </div>
+        </Alert>
+      </Col>
+
+      <!--后台返info就显示出来， 权限控制放后台 -->
+      <Col v-if="submission.info && !isCE" :span="20">
+        <Table stripe :loading="loading" :disabled-hover="true" :columns="columns" :data="submission.info.data"></Table>
+      </Col>
+
+      <Col :span="20">
+        <Highlight :code="submission.code" :language="submission.language" :border-color="status.color"></Highlight>
+      </Col>
+      <Col v-if="submission.can_unshare" :span="20">
+        <div id="share-btn">
+          <Button v-if="submission.shared"
+                  type="warning" size="large" @click="shareSubmission(false)">
+            {{$t('m.UnShare')}}
+          </Button>
+          <Button v-else
+                  type="primary" size="large" @click="shareSubmission(true)">
+            {{$t('m.Share')}}
+          </Button>
         </div>
-      </Alert>
-    </Col>
+      </Col>
+    </Row>
 
-    <!--后台返info就显示出来， 权限控制放后台 -->
-    <Col v-if="submission.info && !isCE" :span="20">
-      <Table stripe :loading="loading" :disabled-hover="true" :columns="columns" :data="submission.info.data"></Table>
-    </Col>
-
-    <Col :span="20">
-      <Highlight :code="submission.code" :language="submission.language" :border-color="status.color"></Highlight>
-    </Col>
-    <Col v-if="submission.can_unshare" :span="20">
-      <div id="share-btn">
-        <Button v-if="submission.shared"
-                type="warning" size="large" @click="shareSubmission(false)">
-          {{$t('m.UnShare')}}
-        </Button>
-        <Button v-else
-                type="primary" size="large" @click="shareSubmission(true)">
-          {{$t('m.Share')}}
-        </Button>
-      </div>
-    </Col>
-  </Row>
+    <Modal
+      v-model="showHint"
+      width="50%"
+      :title="`Test case ` + hint.test_case">
+        <Row>
+          <Col width="500px" flex="1">
+            <h3>Input</h3>
+            <Card dis-hover>
+              <pre><span>{{ hint.input }}</span></pre>
+            </Card>
+          </Col>
+          <Col width="500px" flex="1">
+            <h3>Output</h3>
+            <Card dis-hover>
+              <pre><span>{{ hint.output }}</span></pre>
+            </Card>
+          </Col>
+        </Row>
+    </Modal>
+  </div>
 
 </template>
 
@@ -64,11 +86,21 @@
             title: this.$i18n.t('m.Status'),
             align: 'center',
             render: (h, params) => {
-              return h('Tag', {
-                props: {
-                  color: JUDGE_STATUS[params.row.result].color
-                }
-              }, this.$i18n.t('m.' + JUDGE_STATUS[params.row.result].name.replace(/ /g, '_')))
+              let hintTag = ''
+              if (this.hint.test_case === (params.index + 1).toString()) {
+                hintTag = h('a', {
+                  on: {
+                    click: this.showTestCase
+                  }
+                }, '测试数据')
+              }
+              return h('div', {}, [
+                h('Tag', {
+                  props: {
+                    color: JUDGE_STATUS[params.row.result].color
+                  }
+                }, this.$i18n.t('m.' + JUDGE_STATUS[params.row.result].name.replace(/ /g, '_'))), hintTag
+              ])
             }
           },
           {
@@ -97,7 +129,13 @@
             memory_cost: ''
           }
         },
+        hint: {
+          test_case: '',
+          input: '',
+          output: ''
+        },
         isConcat: false,
+        showHint: false,
         loading: false
       }
     },
@@ -142,6 +180,7 @@
             }
           }
           this.submission = data
+          this.loadHint()
         }, () => {
           this.loading = false
         })
@@ -153,6 +192,17 @@
           this.$success(this.$i18n.t('m.Succeeded'))
         }, () => {
         })
+      },
+      loadHint () {
+        api.getSubmissionHint(this.$route.params.id).then(res => {
+          let data = res.data.data
+          this.hint = data
+        }, () => {
+          // do nothing
+        })
+      },
+      showTestCase () {
+        this.showHint = true
       }
     },
     computed: {
@@ -209,5 +259,12 @@
   pre {
     border: none;
     background: none;
+  }
+
+  pre span {
+    display: block;
+    line-height: 1.5rem;
+    counter-increment: line;
+    counter-reset: line;
   }
 </style>

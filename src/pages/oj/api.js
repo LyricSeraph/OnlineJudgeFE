@@ -244,6 +244,13 @@ export default {
       data
     })
   },
+  getSubmissionHint (id) {
+    return ajax('submission_hint', 'get', {
+      params: {
+        submission_id: id
+      }
+    })
+  },
   getUserRank (offset, limit, rule = 'acm') {
     let params = {
       offset,

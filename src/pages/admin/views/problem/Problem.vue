@@ -258,6 +258,15 @@
                   </el-input>
                 </template>
               </el-table-column>
+
+              <el-table-column
+                prop="public"
+                label="Public">
+                <template slot-scope="scope">
+                  <el-switch
+                    v-model="scope.row.public" active-color="#13ce66" inactive-color="#ff4949" />
+                </template>
+              </el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -297,7 +306,8 @@
         contest: {},
         problem: {
           languages: [],
-          io_mode: {'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt'}
+          io_mode: {'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt'},
+          public_cases: []
         },
         reProblem: {
           languages: [],
@@ -353,7 +363,8 @@
           hint: '',
           answer: '',
           source: '',
-          io_mode: {'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt'}
+          io_mode: {'io_mode': 'Standard IO', 'input': 'input.txt', 'output': 'output.txt'},
+          public_cases: []
         }
         let contestID = this.$route.params.contestId
         if (contestID) {
@@ -381,6 +392,13 @@
             }
             data.spj_language = data.spj_language || 'C'
             this.problem = data
+            // setting public cases
+            for (let testCase of this.problem.test_case_score) {
+              let testIndex = testCase.input_name.replace('.in', '')
+              if (this.problem.public_cases.includes(testIndex)) {
+                testCase['public'] = true
+              }
+            }
             this.testCaseUploaded = true
           })
         } else {
@@ -572,6 +590,15 @@
             this.problem.template[k] = this.template[k].code
           }
         }
+        this.problem.public_cases.length = 0
+        for (let item of this.problem.test_case_score) {
+          if (item.public) {
+            let caseIndex = item['input_name']
+            caseIndex = caseIndex.replace('.in', '')
+            this.problem.public_cases.push(caseIndex)
+          }
+        }
+        console.log('public cases: ' + JSON.stringify(this.problem.public_cases))
         let funcName = {
           'create-problem': 'createProblem',
           'edit-problem': 'editProblem',

@@ -7,7 +7,7 @@
       </transition>
       <div class="footer">
         <p v-html="website.website_footer"></p>
-        <p>Powered by <a href="https://github.com/QingdaoU/OnlineJudge">OnlineJudge</a>. Modified by <a href="https://github.com/LyricSeraph">Lyric Law</a>.</p>
+        <p>Powered by <a href="https://github.com/QingdaoU/OnlineJudge">OnlineJudge</a>. Modified by <a href="mailto:lyriclaw@lyriclaw.me">Lyric Law</a>.</p>
         <p><span v-if="version">Version: {{ version }}</span></p>
       </div>
     </div>
